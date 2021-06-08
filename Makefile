@@ -1,5 +1,14 @@
 include .env
 
+
+install: 
+	@docker-compose up -d
+	@docker exec -it ${APP_NAME}_php8.0 composer update
+	@docker exec -it ${APP_NAME}_php8.0 chmod -R 777 storage/
+	@docker exec -it ${APP_NAME}_php8.0 php artisan key:generate
+	@docker exec -it ${APP_NAME}_php8.0 php artisan migrate
+	@docker exec -it ${APP_NAME}_php8.0 php artisan db:seed
+
 docker-up:
 	@docker-compose up -d
 
