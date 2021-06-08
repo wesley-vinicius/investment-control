@@ -41,4 +41,9 @@ class LoginController extends Controller
             'message' => 'Tokens Revoked'
         ];
     }
+
+    public function me()
+    {
+        return auth()->user();
+    }
 }
