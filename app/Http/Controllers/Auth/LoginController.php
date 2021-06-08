@@ -32,4 +32,13 @@ class LoginController extends Controller
             'password' => ['required', 'string', 'min:8'],
         ])->validate();
     }
+
+    public function logout()
+    {
+        auth()->user()->tokens()->delete();
+
+        return [
+            'message' => 'Tokens Revoked'
+        ];
+    }
 }
