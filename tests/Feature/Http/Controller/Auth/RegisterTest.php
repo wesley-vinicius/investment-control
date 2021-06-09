@@ -106,6 +106,11 @@ class RegisterTest extends TestCase
         $this->assertDatabaseHas('users', [
             'email' => $payload['email'],
         ]);
+
+        $this->assertDatabaseCount('wallets', 1);
+        $this->assertDatabaseHas('wallets', [
+            'name' => 'Default',
+        ]);
     }
 
 }
