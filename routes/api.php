@@ -32,4 +32,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('product', [ProductController::class, 'listAll']);
     Route::get('product/{id}', [ProductController::class, 'view']);
     Route::get('wallet', [WalletController::class, 'listAll']);
+    Route::get('wallet/{id}', [WalletController::class, 'view']);
 });

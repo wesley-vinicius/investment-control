@@ -12,4 +12,14 @@ class WalletController extends Controller
 
         return WalletResource::collection($wallet);
     }
+
+    public function view($id){
+        $wallet = Auth::user()->wallet()->find($id);
+
+        if (!$wallet) {
+            return response(null, 404);
+        }
+
+        return WalletResource::make($wallet);
+    }
 }
