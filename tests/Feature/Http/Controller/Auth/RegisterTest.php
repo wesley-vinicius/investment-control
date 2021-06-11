@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Feature\App\Api\Transaction\Controllers;
+namespace Tests\Feature\Http\Controller\Auth;
 
-use App\Models\User;
+use App\Domain\Auth\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;

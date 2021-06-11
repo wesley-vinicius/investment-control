@@ -1,11 +1,10 @@
 <?php
 
-namespace Tests\Feature\App\Api\Transaction\Controllers;
+namespace Tests\Feature\App\Core\Api\Transaction\Controllers;
 
-use App\Models\User;
+use App\Domain\Auth\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 

@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use Illuminate\Http\Request;
+use App\Domain\Auth\Http\Controllers\LoginController;
+use App\Domain\Auth\Http\Controllers\RegisterController;
+use App\Domain\Transaction\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
