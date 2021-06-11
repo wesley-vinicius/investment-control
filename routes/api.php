@@ -3,7 +3,7 @@
 use App\Domain\Auth\Http\Controllers\LoginController;
 use App\Domain\Auth\Http\Controllers\RegisterController;
 use App\Domain\Product\Http\Controllers\ProductController;
-use App\Domain\Transaction\Http\Controllers\TransactionController;
+use App\Domain\Wallet\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,4 +31,5 @@ Route::prefix('auth')->name('auth.')->group(function () {
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('product', [ProductController::class, 'listAll']);
     Route::get('product/{id}', [ProductController::class, 'view']);
+    Route::get('wallet', [WalletController::class, 'listAll']);
 });

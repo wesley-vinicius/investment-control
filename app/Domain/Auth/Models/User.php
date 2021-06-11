@@ -2,6 +2,7 @@
 
 namespace App\Domain\Auth\Models;
 
+use App\Domain\Wallet\Models\Wallet;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
