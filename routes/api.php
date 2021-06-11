@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Transaction\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,4 +25,9 @@ Route::prefix('auth')->name('auth.')->group(function () {
         Route::post('logout', [LoginController::class, 'logout'])->name('logout');  
         Route::get('me', [LoginController::class, 'me'])->name('me'); 
     });
+});
+
+
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/transaction', [TransactionController::class, 'create']);
 });
