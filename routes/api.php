@@ -30,4 +30,5 @@ Route::prefix('auth')->name('auth.')->group(function () {
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('product', [ProductController::class, 'listAll']);
+    Route::get('product/{id}', [ProductController::class, 'view']);
 });
