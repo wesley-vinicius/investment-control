@@ -20,4 +20,9 @@ class Wallet extends Model
         'description',
         'user_id',
     ];
+
+    public function walletProduct()
+    {
+        return $this->hasMany(WalletProduct::class);
+    }
 }
