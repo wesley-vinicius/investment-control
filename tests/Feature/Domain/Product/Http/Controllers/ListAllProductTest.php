@@ -69,8 +69,7 @@ class ListAllProductTest extends TestCase
             [0],
             [1],
             [2],
-            [10],
-            [100]
+            [10]
         ];
     }
 }
