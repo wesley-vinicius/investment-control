@@ -2,6 +2,7 @@
 
 namespace App\Domain\Product\Models;
 
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,6 +26,11 @@ class Product extends Model
         'document',
         'description'
     ];
+
+    protected static function newFactory()
+    {
+        return ProductFactory::new();
+    }
 
     public function type()
     {
