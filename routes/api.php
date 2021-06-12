@@ -32,7 +32,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('product', [ProductController::class, 'listAll'])->name('product.listAll');
     Route::get('product/{id}', [ProductController::class, 'view'])->name('product.view');
-    Route::get('wallet', [WalletController::class, 'listAll']);
-    Route::get('wallet/{id}', [WalletController::class, 'view']);
-    Route::post('wallet', [CreateWalletController::class, 'execute']);
+    Route::get('wallet', [WalletController::class, 'listAll'])->name('wallet.listAll');
+    Route::get('wallet/{id}', [WalletController::class, 'view'])->name('wallet.view');
+    Route::post('wallet', [CreateWalletController::class, 'execute'])->name('wallet.create');
 });
