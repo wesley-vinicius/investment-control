@@ -15,7 +15,7 @@ class ProductCategorySeeder extends Seeder
     public function run()
     {
         DB::table('product_categories')->insert([
-            ['name' => 'Renda Variavel'],
+            ['name' => 'Ações/Stocks, BDR, ADR, FII e Reits'],
         ]);
     }
 }

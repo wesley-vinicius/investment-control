@@ -2,6 +2,7 @@
 
 namespace App\Domain\Product\Models;
 
+use Database\Factories\ProductTypeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +22,11 @@ class ProductType extends Model
         'name',
         'product_category_id'
     ];
+
+    protected static function newFactory()
+    {
+        return ProductTypeFactory::new();
+    }
 
     public function category()
     {

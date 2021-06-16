@@ -2,6 +2,7 @@
 
 namespace App\Domain\Product\Models;
 
+use Database\Factories\ProductCategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,4 +21,9 @@ class ProductCategory extends Model
     protected $fillable = [
         'name'
     ];
+
+    protected static function newFactory()
+    {
+        return ProductCategoryFactory::new();
+    }
 }
