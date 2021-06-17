@@ -176,6 +176,8 @@ return [
         App\Core\Providers\RouteServiceProvider::class,
 
         App\Domain\Auth\Providers\EventServiceProviderAuth::class,
+        App\Domain\WalletProduct\Providers\EventServiceProviderWalletProduct::class,
+
 
     ],
 

@@ -3,9 +3,9 @@
 use App\Domain\Auth\Http\Controllers\LoginController;
 use App\Domain\Auth\Http\Controllers\RegisterController;
 use App\Domain\Product\Http\Controllers\ProductController;
-use App\Domain\Transaction\Http\Controllers\CreateTransactionController;
 use App\Domain\Wallet\Http\Controllers\CreateWalletController;
 use App\Domain\Wallet\Http\Controllers\WalletController;
+use App\Domain\WalletProduct\Http\Controllers\Stock\InsertStockController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,4 +38,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('wallet/{id}', [WalletController::class, 'view'])->name('wallet.view');
     Route::post('wallet', [CreateWalletController::class, 'execute'])->name('wallet.create');
 
+    Route::prefix('stock')->name('stock.')->group(function () {
+        Route::post('/insert', [InsertStockController::class, 'execute'])->name('insert');  
+    });
+
+    
 });
