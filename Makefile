@@ -31,7 +31,10 @@ docker-exec-php:
 	@docker exec -it ${APP_NAME}_php8.0 bash
 
 test:
-	@docker exec -it ${APP_NAME}_php8.0 php artisan test
+	@docker exec -it ${APP_NAME}_php8.0 php artisan test --coverage-html tests/coverage/html
+
+infection:
+	@docker exec -it ${APP_NAME}_php8.0 vendor/bin/infection
 
 migrate:
 	@docker exec -it ${APP_NAME}_php8.0 php artisan migrate

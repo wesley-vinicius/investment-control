@@ -6,9 +6,13 @@ RUN apt-get update \
 
 RUN apt-get install -y libzip-dev \
     && docker-php-ext-install zip \
-    && docker-php-ext-install pdo_mysql 
+    && docker-php-ext-install pdo_mysql \
+    && pecl install xdebug-3.0.0 \
+    && docker-php-ext-enable xdebug 
     
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+ENV XDEBUG_MODE=coverage
 
 WORKDIR /application
 

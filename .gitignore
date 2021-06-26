@@ -14,3 +14,5 @@ yarn-error.log
 /.idea
 /.vscode
 /docker/.data
+/tests/coverage/
+infection.log
