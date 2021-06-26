@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Product\Models;
 
 use Database\Factories\ProductTypeFactory;
@@ -12,7 +14,7 @@ class ProductType extends Model
 
     public $table = 'product_types';
     public $timestamps = false;
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,16 +22,16 @@ class ProductType extends Model
      */
     protected $fillable = [
         'name',
-        'product_category_id'
+        'product_category_id',
     ];
-
-    protected static function newFactory()
-    {
-        return ProductTypeFactory::new();
-    }
 
     public function category()
     {
         return $this->belongsTo(ProductCategory::class, 'product_category_id', 'id');
+    }
+
+    protected static function newFactory()
+    {
+        return ProductTypeFactory::new();
     }
 }

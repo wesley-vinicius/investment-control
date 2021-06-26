@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Product\Models;
 
 use Database\Factories\ProductCategoryFactory;
@@ -12,14 +14,14 @@ class ProductCategory extends Model
 
     public $table = 'product_categories';
     public $timestamps = false;
-    
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
     ];
 
     protected static function newFactory()

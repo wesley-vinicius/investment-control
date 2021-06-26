@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Auth\Observers;
 
 use App\Domain\Auth\Models\User;
@@ -9,16 +11,13 @@ class UserObserver
 {
     /**
      * Handle the User "created" event.
-     *
-     * @param  \App\Domain\Auth\Models\User  $user
-     * @return void
      */
-    
-    public function created(User $user)
+
+    public function created(User $user): void
     {
         Wallet::create([
             'user_id' => $user->id,
-            'name' => 'Default'
+            'name' => 'Default',
         ]);
     }
 }

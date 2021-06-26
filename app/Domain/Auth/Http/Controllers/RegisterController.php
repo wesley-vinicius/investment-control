@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Auth\Http\Controllers;
 
-use App\Domain\Auth\Models\User;
 use App\Core\Http\Controllers\Controller;
+use App\Domain\Auth\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -16,10 +18,10 @@ class RegisterController extends Controller
         $payload = $this->validator($request->all());
         $this->create($payload);
 
-        return response(null,Response::HTTP_CREATED);
+        return response(null, Response::HTTP_CREATED);
     }
 
-    private function create(array $data)
+    private function create(array $data): void
     {
         $user = new User([
             'name' => $data['name'],

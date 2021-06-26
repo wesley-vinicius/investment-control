@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\WalletProduct\Models;
 
 use Database\Factories\WalletProductFactory;
@@ -11,7 +13,7 @@ class WalletProduct extends Model
     use HasFactory;
 
     public $table = 'wallet_products';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -23,15 +25,10 @@ class WalletProduct extends Model
         'quantity',
         'product_id',
         'amount_applied',
-        'start_date'
+        'start_date',
     ];
 
-    protected static function newFactory()
-    {
-        return WalletProductFactory::new();
-    }
-
-    public function contribution(int $quantity, float $amount)
+    public function contribution(int $quantity, float $amount): void
     {
         if ($quantity <= 0) {
             throw new \InvalidArgumentException('The quantity must be greater than zero');
@@ -44,7 +41,7 @@ class WalletProduct extends Model
         $this->amount_applied += $amount;
     }
 
-    public function rescue(int $quantity, float $amount)
+    public function rescue(int $quantity, float $amount): void
     {
         if ($quantity <= 0) {
             throw new \InvalidArgumentException('The quantity must be greater than zero');
@@ -52,8 +49,13 @@ class WalletProduct extends Model
         if ($amount <= 0) {
             throw new \InvalidArgumentException('The amount must be greater than zero');
         }
-        
+
         $this->quantity -= $quantity;
         $this->amount_applied -= $amount;
+    }
+
+    protected static function newFactory()
+    {
+        return WalletProductFactory::new();
     }
 }

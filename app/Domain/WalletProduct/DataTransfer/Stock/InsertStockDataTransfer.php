@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\WalletProduct\DataTransfer\Stock;
 
 use App\Core\DataTransfer\DataTransferAbstract;
@@ -7,7 +9,7 @@ use App\Domain\WalletProduct\Rules\WalletBelongsUser;
 use DateTimeImmutable;
 
 class InsertStockDataTransfer extends DataTransferAbstract
-{ 
+{
     protected int $wallet_id;
     protected int $product_id;
     protected float $price;
@@ -16,21 +18,42 @@ class InsertStockDataTransfer extends DataTransferAbstract
     protected DateTimeImmutable $date;
     protected float $rates;
 
-    protected function configureValidatorRules(): array
-    {
-        return [
-            "wallet_id"=> ['bail','required', 'integer', 'exists:wallets,id', new WalletBelongsUser()],
-            "product_id"=> ['bail', 'required', 'integer', 'exists:products,id'],
-            "price" => ['bail', 'required', 'gt:0', 'numeric'],
-            "quantity" => ['bail', 'required', 'gt:0', 'integer'],
-            "date" => ['bail', 'required', 'string', 'date'],
-            "rates" => ['nullable', 'numeric', 'gt:0'],
-        ];
-    }
-
     public static function fromRequest(array $data): self
     {
         return new self($data);
+    }
+
+    public function fromCreateMoviment(): array
+    {
+        return [
+            'price' => $this->price,
+            'quantity' => $this->quantity,
+            'amount' => $this->amount,
+            'date' => $this->date,
+            'rates' => $this->rates,
+            'type' => 1,
+        ];
+    }
+
+    public function fromCreateProduct(): array
+    {
+        return [
+            'wallet_id' => $this->wallet_id,
+            'product_id' => $this->product_id,
+            'start_date' => $this->date,
+        ];
+    }
+
+    protected function configureValidatorRules(): array
+    {
+        return [
+            'wallet_id' => ['bail','required', 'integer', 'exists:wallets,id', new WalletBelongsUser()],
+            'product_id' => ['bail', 'required', 'integer', 'exists:products,id'],
+            'price' => ['bail', 'required', 'gt:0', 'numeric'],
+            'quantity' => ['bail', 'required', 'gt:0', 'integer'],
+            'date' => ['bail', 'required', 'string', 'date'],
+            'rates' => ['nullable', 'numeric', 'gt:0'],
+        ];
     }
 
     protected function map(array $data): bool
@@ -50,26 +73,4 @@ class InsertStockDataTransfer extends DataTransferAbstract
     {
         return $this->price * $this->quantity;
     }
-
-    public function fromCreateMoviment(): array
-    {
-        return [
-            'price' => $this->price,
-            'quantity' => $this->quantity,
-            'amount' => $this->amount,
-            'date' => $this->date,
-            'rates' => $this->rates ,
-            'type' => 1
-        ];
-    }
-
-    public function fromCreateProduct(): array 
-    {
-        return [
-            'wallet_id' => $this->wallet_id,
-            'product_id' => $this->product_id,
-            'start_date' => $this->date
-        ];
-    }
-
 }

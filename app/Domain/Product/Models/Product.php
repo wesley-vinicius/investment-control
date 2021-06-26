@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Product\Models;
 
 use Database\Factories\ProductFactory;
@@ -11,7 +13,7 @@ class Product extends Model
     use HasFactory;
 
     public $table = 'products';
-    
+
     /**
      * The attributes that are mass assignable.
      *
@@ -24,17 +26,16 @@ class Product extends Model
         'product_type_id',
         'company_name',
         'document',
-        'description'
+        'description',
     ];
-
-    protected static function newFactory()
-    {
-        return ProductFactory::new();
-    }
 
     public function type()
     {
         return $this->belongsTo(ProductType::class, 'product_type_id', 'id');
     }
 
+    protected static function newFactory()
+    {
+        return ProductFactory::new();
+    }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Product\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -9,15 +11,14 @@ class ProductFilterResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
-            "id" => $this->id,
-            "name" => $this->name,
-            "symbol" => $this->symbol,
+            'id' => $this->id,
+            'name' => $this->name,
+            'symbol' => $this->symbol,
         ];
     }
 }

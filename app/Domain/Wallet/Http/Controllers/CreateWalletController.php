@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Wallet\Http\Controllers;
 
 use App\Core\Http\Controllers\Controller;
@@ -18,7 +20,7 @@ class CreateWalletController extends Controller
         $payload = $this->validator($request->all());
         $this->create($user, $payload);
 
-        return response(null,Response::HTTP_CREATED);
+        return response(null, Response::HTTP_CREATED);
     }
 
     protected function validator(array $data)
@@ -29,7 +31,7 @@ class CreateWalletController extends Controller
         ])->validate();
     }
 
-    protected function create(User $user, array $data)
+    protected function create(User $user, array $data): void
     {
         $wallet = new Wallet([
             'user_id' => $user->id,

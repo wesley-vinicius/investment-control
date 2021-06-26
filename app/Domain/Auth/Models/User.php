@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Auth\Models;
 
 use App\Domain\Wallet\Models\Wallet;
@@ -12,11 +14,6 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
-    private static function newFactory()
-    {
-        return UserFactory::new();
-    }
 
     /**
      * The attributes that are mass assignable.
@@ -51,5 +48,10 @@ class User extends Authenticatable
     public function wallet()
     {
         return $this->hasMany(Wallet::class);
+    }
+
+    private static function newFactory()
+    {
+        return UserFactory::new();
     }
 }

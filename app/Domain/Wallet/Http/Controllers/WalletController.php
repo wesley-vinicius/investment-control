@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace App\Domain\Wallet\Http\Controllers;
 
 use App\Core\Http\Controllers\Controller;
@@ -7,16 +10,18 @@ use Illuminate\Support\Facades\Auth;
 
 class WalletController extends Controller
 {
-    public function listAll(){
+    public function listAll()
+    {
         $wallet = Auth::user()->wallet;
 
         return WalletResource::collection($wallet);
     }
 
-    public function view($id){
+    public function view($id)
+    {
         $wallet = Auth::user()->wallet()->find($id);
 
-        if (!$wallet) {
+        if (! $wallet) {
             return response(null, 404);
         }
 

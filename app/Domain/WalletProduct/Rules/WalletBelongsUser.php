@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\WalletProduct\Rules;
 
 use App\Domain\Wallet\Models\Wallet;
@@ -9,25 +11,19 @@ class WalletBelongsUser implements Rule
 {
     /**
      * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
         $user_id = auth()->id();
         $wallet = Wallet::find($value);
 
-        return $wallet->user_id == $user_id;
+        return $wallet->user_id === $user_id;
     }
 
     /**
      * Get the validation error message.
-     *
-     * @return string
      */
-    public function message()
+    public function message(): string
     {
         return "User doesn't have access to wallet";
     }

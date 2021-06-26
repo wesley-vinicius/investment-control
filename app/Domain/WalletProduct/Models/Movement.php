@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\WalletProduct\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,7 +26,7 @@ class Movement extends Model
         'quantity',
         'amount',
         'date',
-        'rates'
+        'rates',
     ];
 
     public function walletProduct()
@@ -32,7 +34,7 @@ class Movement extends Model
         return $this->belongsTo(WalletProduct::class);
     }
 
-    public function setPriceAttribute(float $value)
+    public function setPriceAttribute(float $value): void
     {
         if ($value <= 0) {
             throw new \InvalidArgumentException('The price must be greater than zero');
@@ -41,7 +43,7 @@ class Movement extends Model
         $this->attributes['price'] = $value;
     }
 
-    public function setQuantityAttribute(int $value)
+    public function setQuantityAttribute(int $value): void
     {
         if ($value <= 0) {
             throw new \InvalidArgumentException('The quantity must be greater than zero');
@@ -50,7 +52,7 @@ class Movement extends Model
         $this->attributes['quantity'] = intval($value);
     }
 
-    public function setAmountAttribute(float $value)
+    public function setAmountAttribute(float $value): void
     {
         if ($value <= 0) {
             throw new \InvalidArgumentException('The amount must be greater than zero');

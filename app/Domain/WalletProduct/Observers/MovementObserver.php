@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\WalletProduct\Observers;
 
 use App\Domain\WalletProduct\Enum\MovementType;
@@ -9,21 +11,17 @@ class MovementObserver
 {
     /**
      * Handle the Movement "created" event.
-     *
-     * @param \App\Domain\WalletProduct\Models\Movement  $movement
-     * @return void
      */
-    public function created(Movement $movement)
+    public function created(Movement $movement): void
     {
         $walletProduct = $movement->walletProduct;
 
-        if ($movement->type == MovementType::CONTRIBUTION) {
+        if ($movement->type === MovementType::CONTRIBUTION) {
             $walletProduct->contribution($movement->quantity, $movement->amount);
-        }else {
+        } else {
             $walletProduct->rescue($movement->quantity, $movement->amount);
         }
 
         $walletProduct->save();
     }
-
 }

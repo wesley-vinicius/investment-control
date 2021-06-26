@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Wallet\Models;
 
 use Database\Factories\WalletFactory;
@@ -22,13 +24,13 @@ class Wallet extends Model
         'user_id',
     ];
 
-    protected static function newFactory()
-    {
-        return WalletFactory::new();
-    }
-
     public function walletProduct()
     {
         return $this->hasMany(WalletProduct::class);
+    }
+
+    protected static function newFactory()
+    {
+        return WalletFactory::new();
     }
 }

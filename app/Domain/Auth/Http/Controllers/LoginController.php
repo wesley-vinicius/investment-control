@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\Auth\Http\Controllers;
 
 use App\Core\Http\Controllers\Controller;
@@ -14,15 +16,30 @@ class LoginController extends Controller
     {
         $credentials = $this->validator($request->only('email', 'password'));
 
-        if (!Auth::attempt($credentials)) {
+        if (! Auth::attempt($credentials)) {
             return response()->json(
-                ['message' => 'Credentials not match']
-            ,Response::HTTP_UNAUTHORIZED);
+                ['message' => 'Credentials not match'],
+                Response::HTTP_UNAUTHORIZED
+            );
         }
 
         return response()->json([
-            'token' => auth()->user()->createToken('API Token')->plainTextToken
+            'token' => auth()->user()->createToken('API Token')->plainTextToken,
         ]);
+    }
+
+    public function logout()
+    {
+        auth()->user()->tokens()->delete();
+
+        return [
+            'message' => 'Tokens Revoked',
+        ];
+    }
+
+    public function me()
+    {
+        return auth()->user();
     }
 
     private function validator(array $data)
@@ -31,19 +48,5 @@ class LoginController extends Controller
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['required', 'string', 'min:8'],
         ])->validate();
-    }
-
-    public function logout()
-    {
-        auth()->user()->tokens()->delete();
-
-        return [
-            'message' => 'Tokens Revoked'
-        ];
-    }
-
-    public function me()
-    {
-        return auth()->user();
     }
 }

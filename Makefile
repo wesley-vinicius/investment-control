@@ -39,6 +39,9 @@ test-unit:
 infection:
 	@docker exec -it ${APP_NAME}_php8.0 vendor/bin/infection
 
+phpinsights:
+	@docker exec -it ${APP_NAME}_php8.0 vendor/bin/phpinsights  
+	
 migrate:
 	@docker exec -it ${APP_NAME}_php8.0 php artisan migrate
 

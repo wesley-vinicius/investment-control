@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Domain\WalletProduct\Providers;
 
 use App\Domain\WalletProduct\Models\Movement;
@@ -8,21 +10,11 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 
 class EventServiceProviderWalletProduct extends ServiceProvider
 {
-    /**
-     * The event listener mappings for the application.
-     *
-     * @var array
-     */
-    protected $listen = [
-      
-    ];
-
+    
     /**
      * Register any events for your application.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         Movement::observe(MovementObserver::class);
     }
