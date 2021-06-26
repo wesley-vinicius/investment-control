@@ -5,16 +5,161 @@ namespace Tests\Feature\Domain\Auth\Http\Controller;
 use App\Domain\Auth\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
     use DatabaseMigrations;
-    
+
     public function setUp(): void
     {
         parent::setUp();
+    }
+
+    /**
+     * @dataProvider getEmailFieldLoginFailureScenarios
+     * @dataProvider getEmailFieldLoginFailurePassword
+     */
+    public function testMustFailLoginAttemptWithoutCorrectData(array $payload, $expected)
+    {
+        $response = $this->postJson(
+            route('auth.login'),
+            $payload
+        );
+
+        $response->assertStatus($expected['status_code']);
+        $response->assertJsonValidationErrors($expected['validationErrors']);
+    }
+
+    public function getEmailFieldLoginFailureScenarios()
+    {
+        return [
+            [
+                'payload' => [
+                    'password' => md5(rand(0, 10)),
+                ],
+                'expected' => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['email'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'email'   => 'test.testecxw.com',
+                    'password' => md5(rand(0, 10)),
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['email'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'email'   => rand(0, 100),
+                    'password' => md5(rand(0, 10)),
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['email'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'email'   => Str::random(256) . '@test.com',
+                    'password' => md5(rand(0, 10)),
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['email'],
+                ]
+            ]
+        ];
+    }
+
+    public function getEmailFieldLoginFailurePassword()
+    {
+        $faker = \Faker\Factory::create('pt_BR');
+        return [
+            [
+                'payload' => [
+                    'email'   => $faker->email,
+                ],
+                'expected' => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['password'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'email'   => $faker->email,
+                    'password' => rand(0, 100),
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['password'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'email'   => $faker->email,
+                    'password' => 'passwww',
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['password'],
+                ]
+            ],
+        ];
+    }
+
+    public function testMustFailLoginAttemptWithoutThePassword()
+    {
+        $payload = [
+            'email' => 'test@test.com',
+        ];
+
+        $response = $this->postJson(
+            route('auth.login'),
+            $payload
+        );
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors(['password']);
+    }
+
+    public function testInvalidEmail()
+    {
+        $payload = [
+            'email' => 'test email',
+            'password' => 'password'
+        ];
+
+        $response = $this->postJson(
+            route('auth.login'),
+            $payload
+        );
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors(['email']);
+    }
+
+
+    public function testPasswordIsLessThanEight()
+    {
+        $payload = [
+            'email' => 'test@test.com',
+            'password' => 'passw',
+        ];
+
+        $response = $this->postJson(
+            route('auth.login'),
+            $payload
+        );
+
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        $response->assertJsonValidationErrors(['password']);
     }
 
     public function testNotLoginIncorrectData()
@@ -25,10 +170,12 @@ class LoginTest extends TestCase
         ];
 
         $response = $this->postJson(
-            route('auth.login'), 
-        $payload);
+            route('auth.login'),
+            $payload
+        );
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        $response->assertJson(['message' => true]);
         $this->assertFalse(Auth::check());
     }
 
@@ -41,10 +188,14 @@ class LoginTest extends TestCase
         ];
 
         $response = $this->postJson(
-            route('auth.login'), 
-        $payload);
+            route('auth.login'),
+            $payload
+        );
 
         $response->assertOk();
+        $response->assertJson([
+            'token' => true,
+        ]);
         $this->assertTrue(Auth::check());
         $this->assertEquals($user->id, Auth::id());
     }

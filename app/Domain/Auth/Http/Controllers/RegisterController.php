@@ -19,7 +19,7 @@ class RegisterController extends Controller
         return response(null,Response::HTTP_CREATED);
     }
 
-    protected function create(array $data)
+    private function create(array $data)
     {
         $user = new User([
             'name' => $data['name'],
@@ -29,7 +29,7 @@ class RegisterController extends Controller
         $user->save();
     }
 
-    protected function validator(array $data)
+    private function validator(array $data)
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],

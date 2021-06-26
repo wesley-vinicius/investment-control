@@ -22,6 +22,7 @@ class LogoutTest extends TestCase
         $response = $this->postJson(route('auth.logout'));
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        $response->assertJson(['message' => true]);    
     }
 
     public function testLoggedInUserHasAccess()
@@ -32,5 +33,6 @@ class LogoutTest extends TestCase
         
         $response = $this->postJson(route('auth.logout'));
         $response->assertOk();
+        $response->assertJson(['message' => true]);    
     }
 }

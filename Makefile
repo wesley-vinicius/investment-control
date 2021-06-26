@@ -33,6 +33,9 @@ docker-exec-php:
 test:
 	@docker exec -it ${APP_NAME}_php8.0 php artisan test --coverage-html tests/coverage/html
 
+test-unit:
+	@docker exec -it ${APP_NAME}_php8.0 php artisan test --testsuite=Unit
+
 infection:
 	@docker exec -it ${APP_NAME}_php8.0 vendor/bin/infection
 

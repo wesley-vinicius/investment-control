@@ -2,6 +2,7 @@
 
 use App\Domain\Auth\Models\User;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------

@@ -11,6 +11,11 @@
         "text": "infection.log"
     },
     "mutators": {
-        "@default": true
+        "@default": true,
+        "PublicVisibility": {
+            "ignore": [
+                "*Controller*"
+            ]
+        }
     }
 }

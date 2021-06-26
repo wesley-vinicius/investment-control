@@ -23,6 +23,7 @@ class MeTest extends TestCase
         $response = $this->getJson(route('auth.me'));
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        $response->assertJson(['message' => true]);    
     }
 
     public function testLoggedInUserHasAccess()
