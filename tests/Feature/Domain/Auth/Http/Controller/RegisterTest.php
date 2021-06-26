@@ -5,31 +5,39 @@ namespace Tests\Feature\Domain\Auth\Http\Controller;
 use App\Domain\Auth\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class RegisterTest extends TestCase
 {
     use DatabaseMigrations;
+
     
+    public function __construct(?string $name = null, array $data = [], $dataName = '')
+    {
+        $this->faker =  \Faker\Factory::create('pt_BR');
+        parent::__construct($name,$data, $dataName);
+    }
+
     public function setUp(): void
     {
         parent::setUp();
     }
 
-    public function testInvalidEmail()
+    /**
+     * @dataProvider getNameFieldRegistryFailureScenarios
+     * @dataProvider getEmailFieldRegistryFailureScenarios
+     * @dataProvider getPasswordFieldRegistryFailureScenarios
+     */
+    public function testMustFailRegistryAttemptWithoutCorrectData(array $payload, $expected)
     {
-        $payload = [
-            'name' => 'test name',
-            'email' => 'test email',
-            'password' => 'password'
-        ];
-
         $response = $this->postJson(
-            route('auth.register'), 
-        $payload);
+            route('auth.register'),
+            $payload
+        );
 
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertJsonValidationErrors(['email']);
+        $response->assertStatus($expected['status_code']);
+        $response->assertJsonValidationErrors($expected['validationErrors']);
     }
 
     public function testRegistrationEmailAlreadyInUse()
@@ -43,48 +51,12 @@ class RegisterTest extends TestCase
         ];
 
         $response = $this->postJson(
-            route('auth.register'), 
-        $payload);
+            route('auth.register'),
+            $payload
+        );
 
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response->assertJsonValidationErrors(['email']);
-    }
-
-    public function testPasswordIsLessThanEight()
-    {
-        $password = 'passw';
-        $payload = [
-            'name' => 'test name',
-            'email' => 'test@test.com', 
-            'password' => $password,
-            "password_confirmation" => $password
-        ];
-
-        $response = $this->postJson(
-            route('auth.register'), 
-        $payload);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertJsonValidationErrors(['password']);
-
-    }
-
-    public function testDifferentPasswords()
-    {
-        $payload = [
-            'name' => 'test name',
-            'email' => 'test@test.com', 
-            'password' => 'password',
-            "password_confirmation" => 'fgbfdgfdgdfgf'
-        ];
-
-        $response = $this->postJson(
-            route('auth.register'), 
-        $payload);
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertJsonValidationErrors(['password']);
-
     }
 
     public function testRegisterUser()
@@ -92,14 +64,15 @@ class RegisterTest extends TestCase
         $password = 'password';
         $payload = [
             'name' => 'test name',
-            'email' => 'test@test.com', 
+            'email' => 'test@test.com',
             'password' => $password,
             "password_confirmation" => $password
         ];
 
         $response = $this->postJson(
-            route('auth.register'), 
-        $payload);
+            route('auth.register'),
+            $payload
+        );
 
         $response->assertStatus(Response::HTTP_CREATED);
         $this->assertDatabaseCount('users', 1);
@@ -111,6 +84,125 @@ class RegisterTest extends TestCase
         $this->assertDatabaseHas('wallets', [
             'name' => 'Default',
         ]);
+    }
+
+    public function getNameFieldRegistryFailureScenarios()
+    {
+        return [
+            [
+                'payload' => [
+                    'email'   => $this->faker->email,
+                    'password' => md5(rand(0, 10)),
+
+                ],
+                'expected' => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['name'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'name'   => rand(0, 100),
+                    'email'   => $this->faker->email,
+                    'password' => md5(rand(0, 10)),
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['name'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'name'   => Str::random(256),
+                    'email'   => $this->faker->email,
+                    'password' => md5(rand(0, 10)),
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['name'],
+                ]
+            ]
+        ];
+    }
+
+    public function getEmailFieldRegistryFailureScenarios()
+    {
+        return [
+            [
+                'payload' => [
+                    'password' => md5(rand(0, 10)),
+                ],
+                'expected' => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['email'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'email'   => 'test.testecxw.com',
+                    'password' => md5(rand(0, 10)),
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['email'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'email'   => rand(0, 100),
+                    'password' => md5(rand(0, 10)),
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['email'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'email'   => Str::random(256) . '@test.com',
+                    'password' => md5(rand(0, 10)),
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['email'],
+                ]
+            ]
+        ];
+    }
+
+    public function getPasswordFieldRegistryFailureScenarios()
+    {
+        return [
+            [
+                'payload' => [
+                    'email'   => $this->faker->email,
+                ],
+                'expected' => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['password'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'email'   => $this->faker->email,
+                    'password' => rand(0, 100),
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['password'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'email'   => $this->faker->email,
+                    'password' => 'passwww',
+                ],
+                'expected'  => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['password'],
+                ]
+            ],
+        ];
     }
 
 }

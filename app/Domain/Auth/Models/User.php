@@ -13,7 +13,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected static function newFactory()
+    private static function newFactory()
     {
         return UserFactory::new();
     }

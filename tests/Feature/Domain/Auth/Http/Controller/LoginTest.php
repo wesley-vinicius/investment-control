@@ -20,7 +20,7 @@ class LoginTest extends TestCase
 
     /**
      * @dataProvider getEmailFieldLoginFailureScenarios
-     * @dataProvider getEmailFieldLoginFailurePassword
+     * @dataProvider getPasswordFieldLoginFailureScenarios
      */
     public function testMustFailLoginAttemptWithoutCorrectData(array $payload, $expected)
     {
@@ -31,6 +31,46 @@ class LoginTest extends TestCase
 
         $response->assertStatus($expected['status_code']);
         $response->assertJsonValidationErrors($expected['validationErrors']);
+    }
+
+    public function testNotLoginIncorrectData()
+    {
+        $user = User::factory()->create();
+
+        $payload = [
+            'email' => $user->email,
+            'password' => '1222332434'
+        ];
+
+        $response = $this->postJson(
+            route('auth.login'),
+            $payload
+        );
+
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        $response->assertJson(['message' => true]);
+        $this->assertFalse(Auth::check());
+    }
+
+    public function testLogin()
+    {
+        $user = User::factory()->create();
+        $payload = [
+            'email' => $user->email,
+            'password' => 'password'
+        ];
+
+        $response = $this->postJson(
+            route('auth.login'),
+            $payload
+        );
+
+        $response->assertOk();
+        $response->assertJson([
+            'token' => true,
+        ]);
+        $this->assertTrue(Auth::check());
+        $this->assertEquals($user->id, Auth::id());
     }
 
     public function getEmailFieldLoginFailureScenarios()
@@ -78,7 +118,7 @@ class LoginTest extends TestCase
         ];
     }
 
-    public function getEmailFieldLoginFailurePassword()
+    public function getPasswordFieldLoginFailureScenarios()
     {
         $faker = \Faker\Factory::create('pt_BR');
         return [
@@ -114,89 +154,4 @@ class LoginTest extends TestCase
         ];
     }
 
-    public function testMustFailLoginAttemptWithoutThePassword()
-    {
-        $payload = [
-            'email' => 'test@test.com',
-        ];
-
-        $response = $this->postJson(
-            route('auth.login'),
-            $payload
-        );
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertJsonValidationErrors(['password']);
-    }
-
-    public function testInvalidEmail()
-    {
-        $payload = [
-            'email' => 'test email',
-            'password' => 'password'
-        ];
-
-        $response = $this->postJson(
-            route('auth.login'),
-            $payload
-        );
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertJsonValidationErrors(['email']);
-    }
-
-
-    public function testPasswordIsLessThanEight()
-    {
-        $payload = [
-            'email' => 'test@test.com',
-            'password' => 'passw',
-        ];
-
-        $response = $this->postJson(
-            route('auth.login'),
-            $payload
-        );
-
-        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-        $response->assertJsonValidationErrors(['password']);
-    }
-
-    public function testNotLoginIncorrectData()
-    {
-        $payload = [
-            'email' => 'test@test.com',
-            'password' => 'password'
-        ];
-
-        $response = $this->postJson(
-            route('auth.login'),
-            $payload
-        );
-
-        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
-        $response->assertJson(['message' => true]);
-        $this->assertFalse(Auth::check());
-    }
-
-    public function testLogin()
-    {
-        $user = User::factory()->create();
-        $payload = [
-            'email' => $user->email,
-            'password' => 'password'
-        ];
-
-        $response = $this->postJson(
-            route('auth.login'),
-            $payload
-        );
-
-        $response->assertOk();
-        $response->assertJson([
-            'token' => true,
-        ]);
-        $this->assertTrue(Auth::check());
-        $this->assertEquals($user->id, Auth::id());
-    }
 }
