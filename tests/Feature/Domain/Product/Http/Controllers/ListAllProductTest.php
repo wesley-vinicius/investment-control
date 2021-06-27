@@ -66,10 +66,10 @@ class ListAllProductTest extends TestCase
     public function countReturnListProductProvider()
     {
         return [
-            [0],
-            [1],
-            [2],
-            [10]
+            'Without products' => [0],
+            'One products' => [1],
+            'Two products' => [2],
+            'Ten products' => [10]
         ];
     }
 }
