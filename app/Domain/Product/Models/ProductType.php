@@ -30,7 +30,7 @@ class ProductType extends Model
         return $this->belongsTo(ProductCategory::class, 'product_category_id', 'id');
     }
 
-    protected static function newFactory()
+    private static function newFactory()
     {
         return ProductTypeFactory::new();
     }

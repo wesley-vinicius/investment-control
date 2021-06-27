@@ -24,7 +24,7 @@ class ProductCategory extends Model
         'name',
     ];
 
-    protected static function newFactory()
+    private static function newFactory()
     {
         return ProductCategoryFactory::new();
     }
