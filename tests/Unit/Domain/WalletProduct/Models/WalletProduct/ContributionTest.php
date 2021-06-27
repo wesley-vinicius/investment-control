@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\WalletProduct\Models\WalletProduct;
+namespace Tests\Unit\Domain\WalletProduct\Models\WalletProduct;
 
 use App\Domain\WalletProduct\Models\WalletProduct;
 use Tests\TestCase;

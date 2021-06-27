@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Product\Models\ProductCategory;
+namespace Tests\Unit\Domain\Product\Models\ProductCategory;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;

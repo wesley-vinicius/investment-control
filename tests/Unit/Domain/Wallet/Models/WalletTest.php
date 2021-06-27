@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Wallet\Models;
+namespace Tests\Unit\Domain\Wallet\Models;
 
 use App\Domain\Auth\Models\User;
 use App\Domain\Product\Models\Product;

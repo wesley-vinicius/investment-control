@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Product\Models\Product;
+namespace Tests\Unit\Domain\Product\Models\Product;
 
 use App\Domain\Product\Models\Product;
 use App\Domain\Product\Models\ProductCategory;

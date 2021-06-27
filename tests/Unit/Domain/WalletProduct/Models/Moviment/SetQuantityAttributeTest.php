@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Unit\WalletProduct\Models;
+namespace Tests\Unit\Domain\WalletProduct\Models;
 
 use App\Domain\WalletProduct\Models\Movement;
 use Tests\TestCase;
 
-class SetAmountAttributeTest extends TestCase
+class SetQuantityAttributeTest extends TestCase
 {
     public function setUp(): void
     {
@@ -16,37 +16,36 @@ class SetAmountAttributeTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $transaction = new Movement();
-        $transaction->setAmountAttribute(-1);
+        $transaction->setQuantityAttribute(-1);
     }
 
     public function testValueCannotBeZero()
     {
         $this->expectException(\InvalidArgumentException::class);
         $transaction = new Movement();
-        $transaction->setAmountAttribute(0);
+        $transaction->setQuantityAttribute(0);
     }
 
     /**
      *
      * @return void
      * 
-     * @dataProvider valueAmountDataProvider
+     * @dataProvider valueQuantityDataProvider
      * 
      */
-    public function testValueGreaterThanZero($amount)
+    public function testValueGreaterThanZero($quantity)
     {
         $transaction = new Movement();
-        $transaction->setAmountAttribute($amount);
-        $this->assertEquals($transaction->amount, $amount);
+        $transaction->setQuantityAttribute($quantity);
+        $this->assertEquals($transaction->quantity, $quantity);
     }
 
-    public function valueAmountDataProvider()
+  
+   public function valueQuantityDataProvider()
     {
         return [
             [1],
-            [0.151],
-            [100,51],
-            [514.15],
+            [10],
         ];
     }
 }
