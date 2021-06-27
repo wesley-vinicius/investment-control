@@ -18,8 +18,13 @@ class ProductController extends Controller
 
     public function view($id)
     {
-        return ProductResource::make(Product::find($id));
+        $product = Product::find($id);
+        if(!$product)
+            return response(null, 404);
+
+        return ProductResource::make($product);
     }
+    
 
     public function filter($idCategory, $filter)
     {

@@ -7,6 +7,7 @@ use App\Domain\Product\Models\Product;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class ViewProductTest extends TestCase
@@ -48,5 +49,11 @@ class ViewProductTest extends TestCase
                 ->missing('data.created_at')
                 ->missing('data.updated_at')
         );
+    }
+
+    public function testReturnNotFoundStatusWhenIsNotExistsProductWithIdInformed()
+    { 
+        $response = $this->getJson(route('product.view', 1));
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 }
