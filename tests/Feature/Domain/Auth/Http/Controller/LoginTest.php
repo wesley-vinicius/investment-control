@@ -76,7 +76,7 @@ class LoginTest extends TestCase
     public function getEmailFieldLoginFailureScenarios()
     {
         return [
-            [
+            'Email is required' => [
                 'payload' => [
                     'password' => md5(rand(0, 10)),
                 ],
@@ -85,7 +85,7 @@ class LoginTest extends TestCase
                     'validationErrors' => ['email'],
                 ]
             ],
-            [
+            'Email must be valid' => [
                 'payload' => [
                     'email'   => 'test.testecxw.com',
                     'password' => md5(rand(0, 10)),
@@ -95,7 +95,7 @@ class LoginTest extends TestCase
                     'validationErrors' => ['email'],
                 ]
             ],
-            [
+            'Email must be a string' => [
                 'payload' => [
                     'email'   => rand(0, 100),
                     'password' => md5(rand(0, 10)),
@@ -105,7 +105,7 @@ class LoginTest extends TestCase
                     'validationErrors' => ['email'],
                 ]
             ],
-            [
+            'Email must not be greater than 255 characters.' =>  [
                 'payload' => [
                     'email'   => Str::random(256) . '@test.com',
                     'password' => md5(rand(0, 10)),
@@ -122,7 +122,7 @@ class LoginTest extends TestCase
     {
         $faker = \Faker\Factory::create('pt_BR');
         return [
-            [
+            'Password is required' => [
                 'payload' => [
                     'email'   => $faker->email,
                 ],
@@ -131,7 +131,7 @@ class LoginTest extends TestCase
                     'validationErrors' => ['password'],
                 ]
             ],
-            [
+            'password must be a string' => [
                 'payload' => [
                     'email'   => $faker->email,
                     'password' => rand(0, 100),
@@ -141,7 +141,7 @@ class LoginTest extends TestCase
                     'validationErrors' => ['password'],
                 ]
             ],
-            [
+            'Password must be at least 8 characters' =>  [
                 'payload' => [
                     'email'   => $faker->email,
                     'password' => 'passwww',

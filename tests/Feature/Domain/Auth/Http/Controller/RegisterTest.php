@@ -45,7 +45,7 @@ class RegisterTest extends TestCase
         $user = User::factory()->create();
 
         $payload = [
-            'name' => 'test name',
+            'name' => 'Name',
             'email' => $user->email,
             'password' => 'password'
         ];
@@ -63,7 +63,7 @@ class RegisterTest extends TestCase
     {
         $password = 'password';
         $payload = [
-            'name' => 'test name',
+            'name' => 'Name',
             'email' => 'test@test.com',
             'password' => $password,
             "password_confirmation" => $password
@@ -89,7 +89,7 @@ class RegisterTest extends TestCase
     public function getNameFieldRegistryFailureScenarios()
     {
         return [
-            [
+            'Name is required' => [
                 'payload' => [
                     'email'   => $this->faker->email,
                     'password' => md5(rand(0, 10)),
@@ -100,7 +100,7 @@ class RegisterTest extends TestCase
                     'validationErrors' => ['name'],
                 ]
             ],
-            [
+            'Name must be a string' =>  [
                 'payload' => [
                     'name'   => rand(0, 100),
                     'email'   => $this->faker->email,
@@ -111,7 +111,7 @@ class RegisterTest extends TestCase
                     'validationErrors' => ['name'],
                 ]
             ],
-            [
+            'Name must not be greater than 255 characters' => [
                 'payload' => [
                     'name'   => Str::random(256),
                     'email'   => $this->faker->email,
@@ -128,7 +128,7 @@ class RegisterTest extends TestCase
     public function getEmailFieldRegistryFailureScenarios()
     {
         return [
-            [
+            'Email is required' => [
                 'payload' => [
                     'password' => md5(rand(0, 10)),
                 ],
@@ -137,7 +137,7 @@ class RegisterTest extends TestCase
                     'validationErrors' => ['email'],
                 ]
             ],
-            [
+            'Email must be valid' => [
                 'payload' => [
                     'email'   => 'test.testecxw.com',
                     'password' => md5(rand(0, 10)),
@@ -147,7 +147,7 @@ class RegisterTest extends TestCase
                     'validationErrors' => ['email'],
                 ]
             ],
-            [
+            'Email must be a string' => [
                 'payload' => [
                     'email'   => rand(0, 100),
                     'password' => md5(rand(0, 10)),
@@ -157,7 +157,7 @@ class RegisterTest extends TestCase
                     'validationErrors' => ['email'],
                 ]
             ],
-            [
+            'Email must not be greater than 255 characters.' =>  [
                 'payload' => [
                     'email'   => Str::random(256) . '@test.com',
                     'password' => md5(rand(0, 10)),
@@ -173,7 +173,7 @@ class RegisterTest extends TestCase
     public function getPasswordFieldRegistryFailureScenarios()
     {
         return [
-            [
+            'Password is required' => [
                 'payload' => [
                     'email'   => $this->faker->email,
                 ],
@@ -182,7 +182,7 @@ class RegisterTest extends TestCase
                     'validationErrors' => ['password'],
                 ]
             ],
-            [
+            'password must be a string' => [
                 'payload' => [
                     'email'   => $this->faker->email,
                     'password' => rand(0, 100),
@@ -192,7 +192,7 @@ class RegisterTest extends TestCase
                     'validationErrors' => ['password'],
                 ]
             ],
-            [
+            'Password must be at least 8 characters' =>  [
                 'payload' => [
                     'email'   => $this->faker->email,
                     'password' => 'passwww',
