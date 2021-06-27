@@ -22,14 +22,28 @@ class CreateWalletTest extends TestCase
         );
     }
 
-    public function testCreateWallet()
+    /**
+     * @dataProvider getNameFieldCreateWalletFailureScenarios
+     * @dataProvider getDescriptionFieldCreateWalletFailureScenarios
+     */
+    public function testMustFailCreateWalletAttemptWithoutCorrectData(array $payload, $expected)
+    {
+        $response = $this->postJson(
+            route('wallet.create'),
+            $payload
+        );
+
+        $response->assertStatus($expected['status_code']);
+        $response->assertJsonValidationErrors($expected['validationErrors']);
+    }
+
+    /**
+     * @dataProvider getCreateWalletSuccessScenarios
+     */
+    public function testCreateWallet(array $payload)
     {
         $user = User::find(1);
-        $payload = [
-            'name' => Str::random(10),
-            'description' => md5(rand(0, 10)),
-        ];
-
+    
         $response = $this->postJson(
             route('wallet.create'), 
         $payload);
@@ -40,6 +54,77 @@ class CreateWalletTest extends TestCase
             'description' => $payload['description'],
             'user_id' => $user->id
         ]);
+    }
+
+    public function getNameFieldCreateWalletFailureScenarios()
+    {
+        return [
+            [
+                'payload' => [
+                    'description' => Str::random(100)
+
+                ],
+                'expected' => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['name'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'name' => rand(0, 1000),
+                    'description' => Str::random(100)
+
+                ],
+                'expected' => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['name'],
+                ]
+            ],
+            [
+                'payload' => [
+                    'name' => Str::random(256),
+                    'description' => Str::random(100)
+
+                ],
+                'expected' => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['name'],
+                ]
+            ],
+        ];
+    }
+
+    public function getDescriptionFieldCreateWalletFailureScenarios()
+    {
+        return [
+            [
+                'payload' => [
+                    'name' => Str::random(10),
+                    'description' => rand(0, 1000)
+
+                ],
+                'expected' => [
+                    'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+                    'validationErrors' => ['description'],
+                ]
+            ],
+        ];
+    }
+
+    public function getCreateWalletSuccessScenarios()
+    {
+        return [
+            [
+                [
+                    'name' => Str::random(10),
+                    'description' => md5(rand(0, 10)), 
+                ],
+                [
+                    'name' => Str::random(10),
+                    'description' => null, 
+                ]
+            ]
+        ];
     }
 
 }

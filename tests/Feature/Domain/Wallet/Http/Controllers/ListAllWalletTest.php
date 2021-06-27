@@ -24,11 +24,9 @@ class ListAllWalletTest extends TestCase
 
     /**
      *
-     * @return void
-     *
-     * @dataProvider listWalletData
+     * @dataProvider getSuccessScenarios
      */
-    public function testListProducts($quantityToCreate, $quantity)
+    public function testListProducts($quantityToCreate, $quantityToExpected)
     {
         Wallet::factory($quantityToCreate)->state(['user_id' => 1])->create();
         $wallet = User::find(1)->wallet;
@@ -38,7 +36,7 @@ class ListAllWalletTest extends TestCase
         foreach($wallet as $key => $product)
         {
             $response->assertJson(fn (AssertableJson $json) =>
-            $json->has('data', $quantity)
+            $json->has('data', $quantityToExpected)
             ->has("data.{$key}", fn ($json) =>
                 $json->where('id', $product->id)
                     ->where('name', $product->name)
@@ -51,13 +49,21 @@ class ListAllWalletTest extends TestCase
     
     }
 
-    public function listWalletData()
+    public function getSuccessScenarios()
     {
         return [
-            [0, 1],
-            [1, 2],
-            [2, 3],
-            [10, 11],
+            [
+                'quantity_to_create' => 0, 
+                'quantity_to_expected' => 1
+            ],
+            [
+                'quantity_to_create' => 1, 
+                'quantity_to_expected' => 2
+            ],
+            [
+                'quantity_to_create' => 9, 
+                'quantity_to_expected' => 10
+            ],
         ];
     }
 }

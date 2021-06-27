@@ -23,7 +23,7 @@ class CreateWalletController extends Controller
         return response(null, Response::HTTP_CREATED);
     }
 
-    protected function validator(array $data)
+    private function validator(array $data)
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
@@ -31,7 +31,7 @@ class CreateWalletController extends Controller
         ])->validate();
     }
 
-    protected function create(User $user, array $data): void
+    private function create(User $user, array $data): void
     {
         $wallet = new Wallet([
             'user_id' => $user->id,
