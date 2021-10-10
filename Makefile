@@ -50,3 +50,7 @@ migrate-rollback:
 
 migrate-refresh:
 	@docker exec -it ${APP_NAME}_php8.0 php artisan migrate:refresh
+
+seed:
+	@docker exec -it ${APP_NAME}_php8.0 php artisan db:seed
+
